@@ -4,7 +4,6 @@ import static com.gildedrose.GildedRoseConstants.*;
 
 class GildedRose {
 
-    GildedRoseConstants constants;
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -12,55 +11,64 @@ class GildedRose {
     }
 
     public void updateQuality() {
-        for (Item item : items) {
-            if (!item.name.equals(AGED_BRIE)
-                && !item.name.equals(BACKSTAGE_PASSES)) {
-                if (item.quality > 0) {
-                    if (!item.name.equals(HAND_OF_RAGNAROS)) {
-                        item.quality = item.quality - 1;
-                    }
-                }
-            } else {
+        for (Item item : items) updateItems(item);
+    }
+
+    private void updateItems(Item item) {
+        switch (item.name) {
+            case AGED_BRIE:
                 if (item.quality < 50) {
                     item.quality = item.quality + 1;
-
-                    if (item.name.equals(BACKSTAGE_PASSES)) {
-                        if (item.sellIn < 11) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1;
-                            }
-                        }
-
-                        if (item.sellIn < 6) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1;
-                            }
-                        }
-                    }
                 }
-            }
 
-            if (!item.name.equals(HAND_OF_RAGNAROS)) {
                 item.sellIn = item.sellIn - 1;
-            }
 
-            if (item.sellIn < 0) {
-                if (!item.name.equals(AGED_BRIE)) {
-                    if (!item.name.equals(BACKSTAGE_PASSES)) {
-                        if (item.quality > 0) {
-                            if (!item.name.equals(HAND_OF_RAGNAROS)) {
-                                item.quality = item.quality - 1;
-                            }
-                        }
-                    } else {
-                        item.quality = 0;
-                    }
-                } else {
+                if (item.sellIn < 0) {
                     if (item.quality < 50) {
                         item.quality = item.quality + 1;
                     }
                 }
-            }
+                break;
+            case BACKSTAGE_PASSES:
+                if (item.quality < 50) {
+                    item.quality = item.quality + 1;
+
+                    if (item.sellIn < 11) {
+                        if (item.quality < 50) {
+                            item.quality = item.quality + 1;
+                        }
+                    }
+
+                    if (item.sellIn < 6) {
+                        if (item.quality < 50) {
+                            item.quality = item.quality + 1;
+                        }
+                    }
+                }
+
+                item.sellIn = item.sellIn - 1;
+
+                if (item.sellIn < 0) {
+                    item.quality = 0;
+                }
+                break;
+            case HAND_OF_RAGNAROS:
+                //Do Nothing if Ragnaros
+                break;
+            default:
+                if (item.quality > 0) {
+                    item.quality = item.quality - 1;
+                }
+
+                item.sellIn = item.sellIn - 1;
+
+                if (item.sellIn < 0) {
+                    if (item.quality > 0) {
+                        item.quality = item.quality - 1;
+                    }
+                }
+                break;
         }
     }
+
 }
