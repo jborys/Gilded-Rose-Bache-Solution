@@ -1,6 +1,5 @@
 .idea/
 *.iml
-target/
 
 .classpath
 .project
@@ -11,3 +10,19 @@ bin/
 .gradle
 /build/
 
+target/
+/gradle/
+/.idea/
+/.idea/*
+/.idea/misc.xml
+/.idea/modules.xml
+.idea/vcs.xml
+.idea/gumball-machine-clean-solution.iml
+.idea/.gitignore
+.DS_Store
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.ipr
+/out/
