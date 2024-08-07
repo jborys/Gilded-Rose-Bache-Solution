@@ -1,9 +1,5 @@
 package com.gildedrose;
 
-import org.approvaltests.reporters.ClipboardReporter;
-import org.approvaltests.reporters.UseReporter;
-
-
 class GildedRose {
     Item[] items;
 
