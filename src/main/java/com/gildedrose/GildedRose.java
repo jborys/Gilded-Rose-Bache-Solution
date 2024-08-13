@@ -1,6 +1,9 @@
 package com.gildedrose;
 
 class GildedRose {
+    public static final int MAX_QUALITY = 50;
+    public static final int TIER_ONE = 11;
+    public static final int TIER_TWO = 6;
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -8,55 +11,66 @@ class GildedRose {
     }
 
     public void updateQuality() {
-        for (Item item : items) {
-            if (!item.name.equals("Aged Brie")
-                && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (item.quality > 0) {
-                    if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                        item.quality = item.quality - 1;
-                    }
+        for (Item item : items) performUpdateItem(item);
+    }
+
+    private void performUpdateItem(Item item) {
+        switch (item.name) {
+            case GildedRoseConstants.AGED_BRIE:
+                incrementQuality(item);
+
+                decrementQuality(item);
+
+                if (item.sellIn < 0) {
+                    incrementQuality(item);
                 }
-            } else {
-                if (item.quality < 50) {
+                break;
+            case GildedRoseConstants.BACKSTAGE_PASSES:
+                if (item.quality < MAX_QUALITY) {
                     item.quality = item.quality + 1;
 
-                    if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (item.sellIn < 11) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1;
-                            }
-                        }
+                    if (item.sellIn < TIER_ONE) {
+                        incrementQuality(item);
+                    }
 
-                        if (item.sellIn < 6) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1;
-                            }
-                        }
+                    if (item.sellIn < TIER_TWO) {
+                        incrementQuality(item);
                     }
                 }
-            }
 
-            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                item.sellIn = item.sellIn - 1;
-            }
+                decrementQuality(item);
 
-            if (item.sellIn < 0) {
-                if (!item.name.equals("Aged Brie")) {
-                    if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (item.quality > 0) {
-                            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                                item.quality = item.quality - 2;
-                            }
-                        }
-                    } else {
-                        item.quality = item.quality - item.quality;
-                    }
-                } else {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
+                if (item.sellIn < 0) {
+                    item.quality = 0;
+                }
+                break;
+            case GildedRoseConstants.HAND_OF_RAGNAROS:
+                //Does not change. It is magical.
+                break;
+            default:
+                if (item.quality > 0) {
+                    item.quality = item.quality - 1;
+                }
+
+                decrementQuality(item);
+
+                if (item.sellIn < 0) {
+                    if (item.quality > 0) {
+                        item.quality = item.quality - 2;
                     }
                 }
-            }
+                break;
         }
     }
+
+    private void decrementQuality(Item item) {
+        item.sellIn = item.sellIn - 1;
+    }
+
+    private void incrementQuality(Item item) {
+        if (item.quality < MAX_QUALITY) {
+            item.quality = item.quality + 1;
+        }
+    }
+
 }
